@@ -48,8 +48,8 @@ const Header = () => {
               <Phone className="h-4 w-4" />
               (11) 99999-9999
             </a>
-            <Button className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-6">
-              Orçamento Grátis
+            <Button asChild className="bg-accent text-accent-foreground hover:bg-accent/90 rounded-full px-6">
+              <a href="#contato">Orçamento Grátis</a>
             </Button>
           </div>
 
