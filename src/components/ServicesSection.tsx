@@ -60,14 +60,18 @@ const ServicesSection = () => {
           {services.map((service) => (
             <Card
               key={service.title}
-              className="group border-border/50 hover:border-accent/30 hover:shadow-lg transition-all duration-300 bg-card"
+              className={`group border-border/50 hover:border-accent/30 hover:shadow-lg transition-all duration-300 overflow-hidden relative ${service.backgroundImage ? "" : "bg-card"}`}
+              style={service.backgroundImage ? { backgroundImage: `url(${service.backgroundImage})`, backgroundSize: "cover", backgroundPosition: "center" } : undefined}
             >
-              <CardContent className="p-8">
-                <div className="w-14 h-14 bg-accent/10 rounded-2xl flex items-center justify-center mb-6 group-hover:bg-accent/20 transition-colors">
-                  <service.icon className="h-7 w-7 text-accent" />
+              {service.backgroundImage && (
+                <div className="absolute inset-0 bg-foreground/70 group-hover:bg-foreground/60 transition-colors" />
+              )}
+              <CardContent className="p-8 relative z-10">
+                <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-6 transition-colors ${service.backgroundImage ? "bg-white/15 group-hover:bg-white/25" : "bg-accent/10 group-hover:bg-accent/20"}`}>
+                  <service.icon className={`h-7 w-7 ${service.backgroundImage ? "text-white" : "text-accent"}`} />
                 </div>
-                <h3 className="font-display text-xl font-semibold text-foreground mb-3">{service.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{service.description}</p>
+                <h3 className={`font-display text-xl font-semibold mb-3 ${service.backgroundImage ? "text-white" : "text-foreground"}`}>{service.title}</h3>
+                <p className={`leading-relaxed ${service.backgroundImage ? "text-white/80" : "text-muted-foreground"}`}>{service.description}</p>
               </CardContent>
             </Card>
           ))}
