@@ -1,5 +1,12 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { Star, Quote, Award } from "lucide-react";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
 
 interface Testimonial {
   name: string;
@@ -59,10 +66,15 @@ const TestimonialsSection = () => {
           </div>
         </div>
 
-        <div className="grid md:grid-cols-3 gap-8">
-          {testimonials.map((t) => (
-            <Card key={t.name} className="border-border/40 bg-card/80 hover:bg-card hover:shadow-xl hover:-translate-y-1 transition-all duration-500 rounded-3xl overflow-hidden group">
-              <CardContent className="p-8">
+        <Carousel
+          opts={{ align: "start", loop: true }}
+          className="w-full max-w-6xl mx-auto"
+        >
+          <CarouselContent className="-ml-4">
+            {testimonials.map((t) => (
+              <CarouselItem key={t.name} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                <Card className="border-border/40 bg-card/80 hover:bg-card hover:shadow-xl hover:-translate-y-1 transition-all duration-500 rounded-3xl overflow-hidden group h-full">
+                  <CardContent className="p-8">
                 <div className="flex items-start justify-between mb-6">
                   <Quote className="h-10 w-10 text-accent/20 group-hover:text-accent/30 transition-colors duration-500" />
                   <span className="inline-flex items-center px-3 py-1.5 rounded-full bg-secondary/80 text-muted-foreground text-xs font-medium tracking-wide">
@@ -92,10 +104,14 @@ const TestimonialsSection = () => {
                     </div>
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+                  </CardContent>
+                </Card>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+          <CarouselPrevious className="hidden md:flex -left-4 lg:-left-12" />
+          <CarouselNext className="hidden md:flex -right-4 lg:-right-12" />
+        </Carousel>
 
         <div className="mt-16 flex justify-center">
           <div className="inline-flex items-center gap-3 bg-white/60 backdrop-blur-sm border border-border/20 rounded-2xl px-8 py-4">

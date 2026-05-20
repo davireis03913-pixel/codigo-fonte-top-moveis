@@ -14,15 +14,20 @@ const AboutSection = () => {
     <section id="sobre" className="py-24 bg-background">
       <div className="container mx-auto px-6">
         <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Image placeholder */}
+          {/* Image */}
           <div className="relative">
-            <div className="aspect-[4/5] rounded-3xl bg-gradient-to-br from-primary/20 to-accent/20 overflow-hidden">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="text-center">
-                  <div className="w-24 h-24 bg-accent/20 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <span className="font-display text-4xl font-bold text-accent">30+</span>
-                  </div>
-                  <p className="text-muted-foreground font-medium">Anos de Tradição</p>
+            <div className="aspect-[4/5] rounded-3xl overflow-hidden relative shadow-2xl">
+              <img
+                src="https://images.unsplash.com/photo-1556909114-f6e7ad7d3136?auto=format&fit=crop&w=1200&q=80"
+                alt="Marcenaria tradicional - 30+ anos de tradição"
+                className="absolute inset-0 w-full h-full object-cover"
+                loading="lazy"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/70 via-foreground/20 to-transparent" />
+              <div className="absolute bottom-8 left-8 right-8 text-center">
+                <div className="inline-flex flex-col items-center bg-background/90 backdrop-blur-sm rounded-2xl px-8 py-5">
+                  <span className="font-display text-4xl font-bold text-accent">30+</span>
+                  <p className="text-foreground/80 font-medium text-sm tracking-wide">Anos de Tradição</p>
                 </div>
               </div>
             </div>
