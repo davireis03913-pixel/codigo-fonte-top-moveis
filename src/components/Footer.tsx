@@ -1,71 +1,151 @@
-import { MapPin, Phone, Mail } from "lucide-react";
+import { Star, Quote, Instagram, MessageCircle } from "lucide-react";
+import { useRef } from "react";
+import Autoplay from "embla-carousel-autoplay";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/ui/carousel";
+
+const testimonials = [
+  {
+    name: "Maria Helena S.",
+    role: "Cozinha Planejada",
+    highlight: "Simplesmente perfeito!",
+    body: "A equipe da TOP Móveis entendeu exatamente o que eu queria. Minha cozinha ficou muito além das expectativas.",
+  },
+  {
+    name: "Carlos Eduardo M.",
+    role: "Home Office Completo",
+    highlight: "Profissionalismo do início ao fim.",
+    body: "O projeto 3D me deu total segurança antes de aprovar. O resultado final ficou impecável e funcional.",
+  },
+  {
+    name: "Ana Paula R.",
+    role: "Apartamento Completo",
+    highlight: "Qualidade excepcional.",
+    body: "Fizemos todos os móveis com a TOP Móveis. Pontualidade na entrega e atendimento extraordinário.",
+  },
+];
+
+const navLinks = [
+  { label: "Home", href: "#inicio" },
+  { label: "Projetos", href: "#portfolio" },
+  { label: "Sobre", href: "#sobre" },
+  { label: "Contato", href: "#contato" },
+  { label: "Orçamento", href: "#contato" },
+];
 
 const Footer = () => {
+  const autoplay = useRef(
+    Autoplay({ delay: 5000, stopOnInteraction: false, stopOnMouseEnter: true })
+  );
+
   return (
-    <footer className="bg-foreground border-t border-primary-foreground/10">
-      <div className="container mx-auto px-6 py-16">
-        <div className="grid md:grid-cols-4 gap-10">
-          {/* Brand */}
-          <div className="md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-accent rounded-lg flex items-center justify-center">
-                <span className="text-accent-foreground font-display font-bold text-lg">T</span>
-              </div>
-              <div>
-                <span className="text-primary-foreground font-display font-bold text-lg block leading-none">TOP Móveis</span>
-                <span className="text-primary-foreground/50 text-xs tracking-widest uppercase">Marcenaria</span>
-              </div>
-            </div>
-            <p className="text-primary-foreground/50 text-sm leading-relaxed">
-              Há mais de 30 anos transformando sonhos em móveis sob medida com qualidade e tradição.
-            </p>
-          </div>
+    <footer
+      id="depoimentos"
+      className="relative bg-zinc-900 text-white overflow-hidden"
+    >
+      {/* Subtle luxury texture */}
+      <div
+        className="absolute inset-0 opacity-[0.04] pointer-events-none"
+        style={{
+          backgroundImage: `url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-rule='evenodd'%3E%3Cpath d='M0 0h1v80H0zM80 0v1H0V0z'/%3E%3C/g%3E%3C/svg%3E")`,
+        }}
+      />
+      {/* Soft top vignette to feel like a closing curtain */}
+      <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-black/40 to-transparent pointer-events-none" />
 
-          {/* Links */}
-          <div>
-            <h4 className="font-display font-semibold text-primary-foreground mb-4">Navegação</h4>
-            <nav className="space-y-2">
-              {["Início", "Serviços", "Portfólio", "Sobre", "Contato"].map((link) => (
-                <a key={link} href={`#${link.toLowerCase()}`} className="block text-sm text-primary-foreground/50 hover:text-accent transition-colors">
-                  {link}
-                </a>
+      <div className="relative container mx-auto px-6 pt-24 pb-10">
+        {/* TESTIMONIALS */}
+        <div className="max-w-3xl mx-auto text-center mb-14">
+          <span className="text-accent font-medium text-xs tracking-[0.3em] uppercase">Depoimentos</span>
+          <h2 className="font-display text-3xl md:text-5xl font-normal text-white mt-4 mb-5 tracking-tight">
+            O que nossos clientes dizem
+          </h2>
+          <div className="inline-flex items-center gap-2 bg-white/5 backdrop-blur-sm border border-white/10 rounded-full px-5 py-2.5">
+            <div className="flex items-center gap-1">
+              {Array.from({ length: 5 }).map((_, i) => (
+                <Star key={i} className="h-4 w-4 fill-amber-400 text-amber-400" />
               ))}
-            </nav>
-          </div>
-
-          {/* Services */}
-          <div>
-            <h4 className="font-display font-semibold text-primary-foreground mb-4">Serviços</h4>
-            <nav className="space-y-2">
-              {["Cozinhas Planejadas", "Dormitórios", "Salas de Estar", "Banheiros", "Escritórios"].map((s) => (
-                <span key={s} className="block text-sm text-primary-foreground/50">{s}</span>
-              ))}
-            </nav>
-          </div>
-
-          {/* Contact */}
-          <div>
-            <h4 className="font-display font-semibold text-primary-foreground mb-4">Contato</h4>
-            <div className="space-y-3">
-              <div className="flex items-start gap-2 text-sm text-primary-foreground/50">
-                <MapPin className="h-4 w-4 mt-0.5 shrink-0 text-accent" />
-                Rua da Marcenaria, 1000, São Paulo - SP
-              </div>
-              <div className="flex items-center gap-2 text-sm text-primary-foreground/50">
-                <Phone className="h-4 w-4 shrink-0 text-accent" />
-                (11) 99999-9999
-              </div>
-              <div className="flex items-center gap-2 text-sm text-primary-foreground/50">
-                <Mail className="h-4 w-4 shrink-0 text-accent" />
-                contato@topmoveis.com.br
-              </div>
             </div>
+            <span className="text-sm text-white/70 font-light">Avaliado com 5 estrelas</span>
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/10 mt-12 pt-8 text-center">
-          <p className="text-sm text-primary-foreground/40">
-            © {new Date().getFullYear()} TOP Móveis Marcenaria. Todos os direitos reservados.
+        <Carousel
+          opts={{ align: "start", loop: true }}
+          plugins={[autoplay.current]}
+          className="w-full max-w-5xl mx-auto mb-20"
+        >
+          <CarouselContent className="-ml-4">
+            {testimonials.map((t) => (
+              <CarouselItem key={t.name} className="pl-4 md:basis-1/2 lg:basis-1/3">
+                <div className="h-full rounded-2xl bg-white/[0.03] border border-white/10 backdrop-blur-sm p-6 hover:bg-white/[0.06] hover:border-accent/30 transition-all duration-500">
+                  <Quote className="h-8 w-8 text-accent/40 mb-4" />
+                  <p className="text-white font-medium mb-3 leading-relaxed">"{t.highlight}"</p>
+                  <p className="text-white/60 text-sm leading-relaxed mb-5">{t.body}</p>
+                  <div className="pt-4 border-t border-white/10">
+                    <p className="text-white text-sm font-medium">{t.name}</p>
+                    <p className="text-white/40 text-xs tracking-wide">{t.role}</p>
+                  </div>
+                </div>
+              </CarouselItem>
+            ))}
+          </CarouselContent>
+        </Carousel>
+
+        {/* LOGO + MINI NAV */}
+        <div className="text-center mb-14">
+          <div className="inline-flex flex-col items-center">
+            <div className="flex items-center gap-3 mb-2">
+              <div className="w-11 h-11 rounded-lg border border-white/20 bg-gradient-to-br from-white/10 to-white/0 flex items-center justify-center">
+                <span className="font-display font-bold text-xl bg-gradient-to-br from-white to-zinc-400 bg-clip-text text-transparent">T</span>
+              </div>
+              <div className="text-left">
+                <span className="font-display text-2xl font-normal block leading-none bg-gradient-to-r from-white to-zinc-300 bg-clip-text text-transparent">
+                  TOP Móveis
+                </span>
+                <span className="text-white/40 text-[10px] tracking-[0.35em] uppercase">Marcenaria</span>
+              </div>
+            </div>
+          </div>
+
+          <nav className="mt-8 flex flex-wrap items-center justify-center gap-x-1 gap-y-2 text-sm">
+            {navLinks.map((link, i) => (
+              <div key={link.label} className="flex items-center">
+                <a
+                  href={link.href}
+                  className="px-3 py-1 text-white/70 hover:text-accent transition-colors font-light tracking-wide"
+                >
+                  {link.label}
+                </a>
+                {i < navLinks.length - 1 && <span className="text-white/20">|</span>}
+              </div>
+            ))}
+          </nav>
+        </div>
+
+        {/* SOCIAL + DIVIDER */}
+        <div className="border-t border-white/10 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
+          <div className="flex items-center gap-3 order-2 sm:order-1">
+            <a
+              href="#"
+              aria-label="Instagram"
+              className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center text-white/70 hover:text-accent hover:border-accent/60 transition-all duration-300 hover:scale-110"
+            >
+              <Instagram className="h-4 w-4" strokeWidth={1.5} />
+            </a>
+            <a
+              href="#"
+              aria-label="WhatsApp"
+              className="w-10 h-10 rounded-full border border-white/15 flex items-center justify-center text-white/70 hover:text-accent hover:border-accent/60 transition-all duration-300 hover:scale-110"
+            >
+              <MessageCircle className="h-4 w-4" strokeWidth={1.5} />
+            </a>
+          </div>
+          <p className="text-white/40 text-xs tracking-wide font-light order-1 sm:order-2 text-center">
+            © {new Date().getFullYear()} TOP Móveis Marcenaria. Todos os direitos reservados. <span className="text-white/60">Marcenaria de Alta Costura.</span>
           </p>
         </div>
       </div>

@@ -4,9 +4,10 @@ import ServicesSection from "@/components/ServicesSection";
 import ProcessSection from "@/components/ProcessSection";
 import PortfolioSection from "@/components/PortfolioSection";
 import AboutSection from "@/components/AboutSection";
-import TestimonialsSection from "@/components/TestimonialsSection";
 import ContactSection from "@/components/ContactSection";
 import Footer from "@/components/Footer";
+import BackToTop from "@/components/BackToTop";
+import FloatingChat from "@/components/FloatingChat";
 
 const Index = () => {
   return (
@@ -18,10 +19,13 @@ const Index = () => {
         <ProcessSection />
         <PortfolioSection />
         <AboutSection />
-        <TestimonialsSection />
         <ContactSection />
+        {/* Gradient transition into dark footer */}
+        <div className="h-24 bg-gradient-to-b from-background via-zinc-200 to-zinc-900" />
       </main>
       <Footer />
+      <BackToTop />
+      <FloatingChat />
     </div>
   );
 };
