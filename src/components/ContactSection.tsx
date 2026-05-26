@@ -1,8 +1,22 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { MapPin, Phone, Mail, Clock, Sparkles, ImagePlus, ArrowRight, MessageCircle } from "lucide-react";
+import { chatStore } from "@/lib/chatStore";
 
 const ContactSection = () => {
+  const [draft, setDraft] = useState("");
+
+  const startConsult = () => {
+    const text = draft.trim();
+    if (!text) {
+      chatStore.openChat();
+      return;
+    }
+    chatStore.openWithMessage(text);
+    setDraft("");
+  };
+
   return (
     <section id="contato" className="py-32 bg-background">
       <div className="container mx-auto px-6 max-w-6xl">
@@ -29,6 +43,14 @@ const ContactSection = () => {
 
             <div className="relative">
               <Textarea
+                value={draft}
+                onChange={(e) => setDraft(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+                    e.preventDefault();
+                    startConsult();
+                  }
+                }}
                 placeholder="Descreva o ambiente dos seus sonhos ou envie uma foto de inspiração..."
                 className="min-h-[220px] bg-transparent border-0 border-b border-border/60 rounded-none px-0 py-4 text-base font-light leading-relaxed placeholder:text-muted-foreground/60 focus-visible:ring-0 focus-visible:border-accent resize-none"
               />
@@ -44,13 +66,11 @@ const ContactSection = () => {
 
                 <Button
                   size="lg"
-                  asChild
+                  onClick={startConsult}
                   className="bg-foreground text-background hover:bg-foreground/90 rounded-full px-7 h-12 font-light tracking-wide group transition-all duration-300 hover:scale-105 hover:shadow-[0_0_25px_hsl(var(--accent)/0.4)]"
                 >
-                  <a href="#contato">
-                    Iniciar Consultoria Digital
-                    <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-                  </a>
+                  Iniciar Consultoria Digital
+                  <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Button>
               </div>
             </div>

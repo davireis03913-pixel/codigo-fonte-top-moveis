@@ -1,35 +1,25 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef, useEffect } from "react";
 import { MessageCircle, X, Send, Sparkles } from "lucide-react";
-
-type Msg = { role: "user" | "assistant"; content: string };
+import { chatStore, useChatStore, type ChatMsg } from "@/lib/chatStore";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
 
 const FloatingChat = () => {
-  const [open, setOpen] = useState(false);
-  const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([
-    {
-      role: "assistant",
-      content:
-        "Olá! Sou o Consultor Virtual da TOP Móveis. Posso te ajudar com MDF, cores, ferragens e projetos 3D. Em que posso ajudar?",
-    },
-  ]);
+  const { open, loading, messages } = useChatStore();
+  const inputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
   }, [messages, open]);
 
-  const send = async () => {
-    const text = input.trim();
-    if (!text || loading) return;
-    const userMsg: Msg = { role: "user", content: text };
-    const next = [...messages, userMsg];
-    setMessages(next);
-    setInput("");
-    setLoading(true);
+  const send = async (textArg?: string) => {
+    const text = (textArg ?? inputRef.current?.value ?? "").trim();
+    if (!text || chatStore.get().loading) return;
+    const userMsg: ChatMsg = { role: "user", content: text };
+    const next = [...chatStore.get().messages, userMsg];
+    chatStore.set({ messages: next, loading: true });
+    if (inputRef.current) inputRef.current.value = "";
 
     try {
       const resp = await fetch(CHAT_URL, {
@@ -43,8 +33,8 @@ const FloatingChat = () => {
 
       if (!resp.ok || !resp.body) {
         const err = await resp.json().catch(() => ({ error: "Erro ao conectar." }));
-        setMessages((prev) => [...prev, { role: "assistant", content: err.error || "Erro ao processar." }]);
-        setLoading(false);
+        chatStore.setMessages((prev) => [...prev, { role: "assistant", content: err.error || "Erro ao processar." }]);
+        chatStore.set({ loading: false });
         return;
       }
 
@@ -54,7 +44,7 @@ const FloatingChat = () => {
       let acc = "";
       let done = false;
 
-      setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
+      chatStore.setMessages((prev) => [...prev, { role: "assistant", content: "" }]);
 
       while (!done) {
         const { done: d, value } = await reader.read();
@@ -73,7 +63,7 @@ const FloatingChat = () => {
             const delta = p.choices?.[0]?.delta?.content;
             if (delta) {
               acc += delta;
-              setMessages((prev) => {
+              chatStore.setMessages((prev) => {
                 const copy = [...prev];
                 copy[copy.length - 1] = { role: "assistant", content: acc };
                 return copy;
@@ -86,18 +76,27 @@ const FloatingChat = () => {
         }
       }
     } catch (e) {
-      setMessages((prev) => [...prev, { role: "assistant", content: "Erro de conexão. Tente novamente." }]);
+      chatStore.setMessages((prev) => [...prev, { role: "assistant", content: "Erro de conexão. Tente novamente." }]);
     } finally {
-      setLoading(false);
+      chatStore.set({ loading: false });
     }
   };
+
+  // Process pending messages queued from other components (e.g. ContactSection).
+  useEffect(() => {
+    const pending = chatStore.get().pendingSend;
+    if (pending && !loading) {
+      chatStore.consumePending();
+      void send(pending);
+    }
+  }, [open, loading, messages]);
 
   return (
     <>
       {/* Toggle button */}
       <button
         type="button"
-        onClick={() => setOpen((v) => !v)}
+        onClick={() => chatStore.toggle()}
         aria-label="Abrir chat com consultor"
         className={`fixed bottom-6 right-20 z-40 h-14 px-5 rounded-full bg-zinc-900 border border-accent/60 text-white shadow-xl flex items-center gap-2 transition-all duration-300 hover:scale-105 hover:shadow-[0_0_30px_hsl(var(--accent)/0.5)] ${
           open ? "opacity-0 pointer-events-none translate-y-2" : "opacity-100"
@@ -125,7 +124,7 @@ const FloatingChat = () => {
               <p className="text-white/50 text-[10px] tracking-wider uppercase">MDF · Cores · Ferragens</p>
             </div>
           </div>
-          <button onClick={() => setOpen(false)} aria-label="Fechar" className="text-white/60 hover:text-white transition">
+          <button onClick={() => chatStore.closeChat()} aria-label="Fechar" className="text-white/60 hover:text-white transition">
             <X className="h-4 w-4" />
           </button>
         </div>
@@ -149,19 +148,18 @@ const FloatingChat = () => {
 
         {/* Input */}
         <form
-          onSubmit={(e) => { e.preventDefault(); send(); }}
+          onSubmit={(e) => { e.preventDefault(); void send(); }}
           className="border-t border-white/10 p-3 flex items-center gap-2 bg-zinc-950/50"
         >
           <input
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
+            ref={inputRef}
             placeholder="Pergunte sobre MDF, ferragens..."
             className="flex-1 bg-white/5 border border-white/10 rounded-full px-4 py-2 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-accent/60"
             disabled={loading}
           />
           <button
             type="submit"
-            disabled={loading || !input.trim()}
+            disabled={loading}
             className="h-9 w-9 rounded-full bg-accent text-accent-foreground flex items-center justify-center disabled:opacity-50 hover:scale-105 transition"
             aria-label="Enviar"
           >
