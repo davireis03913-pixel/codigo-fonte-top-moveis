@@ -20,8 +20,15 @@ const Index = () => {
         <PortfolioSection />
         <AboutSection />
         <ContactSection />
-        {/* Gradient transition into dark footer */}
-        <div className="h-24 bg-gradient-to-b from-background via-zinc-200 to-zinc-900" />
+        {/* Clean hard cut + thin metallic divider (MDF sheet style) */}
+        <div
+          aria-hidden
+          className="h-px w-full"
+          style={{
+            background:
+              "linear-gradient(to right, transparent 0%, hsl(var(--accent) / 0.5) 20%, hsl(var(--accent) / 0.8) 50%, hsl(var(--accent) / 0.5) 80%, transparent 100%)",
+          }}
+        />
       </main>
       <Footer />
       <BackToTop />
